@@ -1,11 +1,18 @@
-# Build and Release Folders
-bin/
-bin-debug/
-bin-release/
+# Maven
+**/target/
 
-# Other files and folders
-.settings/
+# Eclipse
+**/.settings/
+**/bin/
+**/.project
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# Flash Builder
+**/.actionScriptProperties
+**/.flexLibProperties
+**/project-config.xml
+
+# IntelliJ
+**/.idea/
+**/*.iml
+**/*.iws
+**/atlassian-ide-plugin.xml

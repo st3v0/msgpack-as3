@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.msgpack</groupId>
+    <artifactId>msgpack</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>swc</packaging>
+    <url>https://github.com/st3v0/msgpack-as3</url>
+
+    <issueManagement>
+        <url>https://github.com/st3v0/msgpack-as3/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/st3v0/msgpack-as3.git</connection>
+        <developerConnection>scm:git:https://github.com/st3v0/msgpack-as3.git</developerConnection>
+        <url>https://github.com/st3v0/msgpack-as3.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Stephen Thompson</name>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <flexmojos.version>4.0-RC2</flexmojos.version>
+        <flexunit.version>4.0-rc-1</flexunit.version>
+        <flex.sdk.version>4.5.1.21328</flex.sdk.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.adobe.flexunit</groupId>
+                <artifactId>flexunit</artifactId>
+                <version>${flexunit.version}</version>
+                <type>swc</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.adobe.flex.framework</groupId>
+                <artifactId>flex-framework</artifactId>
+                <version>${flex.sdk.version}</version>
+                <type>pom</type>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>external.atlassian.jgitflow</groupId>
+                    <artifactId>jgitflow-maven-plugin</artifactId>
+                    <version>1.0-m5.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <pushFeatures>true</pushFeatures>
+                        <pushReleases>true</pushReleases>
+                        <pushHotfixes>true</pushHotfixes>
+
+                        <flowInitContext>
+                            <versionTagPrefix>${project.artifactId}-</versionTagPrefix>
+                        </flowInitContext>
+
+                    </configuration>
+                </plugin>
+
+                <!--
+                This modifies the clean plugin to correctly cleanup the Flex Unit
+                generated classes.
+                -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.4.1</version>
+                    <executions>
+                        <execution>
+                            <id>remove FB FlexUnit-generated files</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                            <configuration>
+                                <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                <failOnError>false</failOnError>
+                                <filesets>
+                                    <fileset>
+                                        <directory>${project.build.sourceDirectory}</directory>
+                                        <includes>
+                                            <include>FlexUnitApplication.mxml</include>
+                                            <include>FlexUnitApplication-app.xml</include>
+                                            <include>FlexUnitCompilerApplication.mxml</include>
+                                        </includes>
+                                        <followSymlinks>true</followSymlinks>
+                                    </fileset>
+                                </filesets>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>2.7</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/main/flex</source>
+                                    <source>src/main/resources/locale/{locale}</source>
+                                    <source>src/main/resources/locale</source>
+                                    <source>src/main/resources/assets</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.flexmojos</groupId>
+                    <artifactId>flexmojos-maven-plugin</artifactId>
+                    <version>${flexmojos.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+
+                        <localesSourcePath>${basedir}/src/main/resources/locale/{locale}</localesSourcePath>
+
+                        <localesCompiled>
+                            <locale>en_US</locale>
+                        </localesCompiled>
+
+                        <defines>
+                            <property>
+                                <name>BUILD::version</name>
+                                <value>'${project.version}'</value>
+                            </property>
+                        </defines>
+
+                        <allowSourcePathOverlap>true</allowSourcePathOverlap>
+
+                        <compilerWarnings>
+                            <show-deprecation-warnings>false</show-deprecation-warnings>
+                            <warn-no-constructor>false</warn-no-constructor>
+                        </compilerWarnings>
+
+                        <debug>false</debug>
+                        <optimize>true</optimize>
+                        <verboseStacktraces>true</verboseStacktraces>
+                        <staticLinkRuntimeSharedLibraries>true</staticLinkRuntimeSharedLibraries>
+                        <omitTraceStatements>true</omitTraceStatements>
+                        <headlessServer>true</headlessServer>
+                        <allowHeadlessMode>true</allowHeadlessMode>
+                        <testTimeout>600000</testTimeout>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.adobe.flex</groupId>
+                            <artifactId>compiler</artifactId>
+                            <version>${flex.sdk.version}</version>
+                            <type>pom</type>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>generate-dita-doc</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>dita-asdoc</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+							<id>generate-asdoc</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>asdoc</goal>
+							</goals>
+							<configuration>
+								<windowTitle>MsgPack for ActionScript3 (${project.version})</windowTitle>
+								<mainTitle>MsgPack for ActionScript3 (${project.version})</mainTitle>
+	                        	<dateInFooter>true</dateInFooter>
+	                        	<leftFramesetWidth>350</leftFramesetWidth>
+	                        </configuration>
+						</execution>
+                    </executions>
+                </plugin>
+
+            </plugins>
+
+        </pluginManagement>
+
+        <sourceDirectory>${basedir}/src/main/flex</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/flex</testSourceDirectory>
+
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources/assets/</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.flexmojos</groupId>
+                <artifactId>flexmojos-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.adobe.flexunit</groupId>
+            <artifactId>flexunit</artifactId>
+            <type>swc</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>flex-framework</artifactId>
+            <type>pom</type>
+        </dependency>
+
+    </dependencies>
+
+</project>
