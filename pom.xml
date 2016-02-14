@@ -71,9 +71,10 @@
                     <version>1.0-m5.1</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <pushFeatures>true</pushFeatures>
+                        <!-- <pushFeatures>true</pushFeatures>
                         <pushReleases>true</pushReleases>
-                        <pushHotfixes>true</pushHotfixes>
+                        <pushHotfixes>true</pushHotfixes> -->
+                        <noDeploy>true</noDeploy>
 
                         <flowInitContext>
                             <versionTagPrefix>${project.artifactId}-</versionTagPrefix>
