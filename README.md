@@ -1,5 +1,5 @@
 # MessagePack for ActionScript3
-<p>msgpack-as3 is an implementation of the latest [MessagePack] specification for ActionScript3 language (Flash, Flex and AIR).</p>
+<p>msgpack-as3 is an implementation of the latest MessagePack specification for ActionScript3 language (Flash, Flex and AIR).</p>
 
 * Message Pack specification (Dec 22, 2015): <https://github.com/msgpack/msgpack/blob/master/spec.md>
 
@@ -38,8 +38,6 @@ msgpack = new MsgPack(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY | MsgPackFlags.ACCEPT_
 ## Credits
 This application uses Open Source components. You can find the source code of their open source projects along with license information below. We acknowledge and are grateful to these developers for their contributions to open source.
 
-<p>Project: as3-msgpack https://github.com/loteixeira/as3-msgpack</p>
-<p>Copyright (C) 2013 Lucas Teixeira</p>
-<p>License (Apache V2.0) http://www.apache.org/licenses/LICENSE-2.0</p>
-
-[MessagePack]: http://msgpack.org
+Project: as3-msgpack https://github.com/loteixeira/as3-msgpack  
+Copyright (C) 2013 Lucas Teixeira  
+License (Apache V2.0) http://www.apache.org/licenses/LICENSE-2.0  
