@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.msgpack</groupId>
     <artifactId>msgpack</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <packaging>swc</packaging>
     <url>https://github.com/st3v0/msgpack-as3</url>
 
@@ -172,7 +172,7 @@
                         <omitTraceStatements>true</omitTraceStatements>
                         <headlessServer>true</headlessServer>
                         <allowHeadlessMode>true</allowHeadlessMode>
-                        <testTimeout>600000</testTimeout>
+                        <testTimeout>1200000</testTimeout>
                     </configuration>
                     <dependencies>
                         <dependency>

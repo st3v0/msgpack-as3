@@ -120,12 +120,17 @@ package org.msgpack.workers
         {
             var l:uint = data.length;
             
-            if (l < 16)
+            if (l < 0x10)
             {
                 // fix array
                 destination.writeByte(0x90 | l);
             }
-            else if (l < 65536)
+			/*else if (l < 0x100)
+			{
+				// array 8
+				// NOP 
+			}*/
+            else if (l < 0x10000)
             {
                 // array 16
                 destination.writeByte(0xdc);
@@ -151,15 +156,12 @@ package org.msgpack.workers
         override public function disassembly(byte:int, source:IDataInput):*
         {
             var count:int = -1;
-            //if (count == -1)
-            //{
             if ((byte & 0xf0) == 0x90)
                 count = byte & 0x0f
             else if (byte == 0xdc && source.bytesAvailable >= 2)
                 count = source.readUnsignedShort();
             else if (byte == 0xdd && source.bytesAvailable >= 4)
                 count = source.readUnsignedInt();
-            //}
             
             var array:Array = [];
             

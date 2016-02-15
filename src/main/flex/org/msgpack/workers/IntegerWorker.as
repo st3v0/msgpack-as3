@@ -141,20 +141,20 @@ package org.msgpack.workers
                     destination.writeInt(data);
                 }
             }
-            else if (data < 128)
+            else if (data < 0x80)
             {
                 // positive/negative fixnum
                 destination.writeByte(data);
             }
             else
             {
-                if (data < 256)
+                if (data < 0x100)
                 {
                     // unsigned 8
                     destination.writeByte(0xcc);
                     destination.writeByte(data);
                 }
-                else if (data < 65536)
+                else if (data < 0x10000)
                 {
                     // unsigned 16
                     destination.writeByte(0xcd);
