@@ -121,13 +121,13 @@ package org.msgpack.workers
             const bytes:ByteArray = data as ByteArray;
             const l:uint = bytes.length;
             
-            if (l < 256)
+            if (l < 0x100)
             {
                 // bin 8
                 destination.writeByte(0xc4);
                 destination.writeByte(bytes.length);
             }
-            else if (l < 65536)
+            else if (l < 0x10000)
             {
                 // bin 16
                 destination.writeByte(0xc5);

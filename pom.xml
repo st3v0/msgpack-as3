@@ -172,7 +172,7 @@
                         <omitTraceStatements>true</omitTraceStatements>
                         <headlessServer>true</headlessServer>
                         <allowHeadlessMode>true</allowHeadlessMode>
-                        <testTimeout>600000</testTimeout>
+                        <testTimeout>1200000</testTimeout>
                     </configuration>
                     <dependencies>
                         <dependency>

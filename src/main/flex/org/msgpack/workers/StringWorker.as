@@ -122,18 +122,18 @@ package org.msgpack.workers
             var bytes:ByteArray = new ByteArray();
             bytes.writeUTFBytes(data.toString());
             
-            if (bytes.length < 32)
+            if (bytes.length < 0x20)
             {
                 // fix str
                 destination.writeByte(0xa0 | bytes.length);
             }
-            else if (!factory.checkFlag(MsgPackFlags.SPEC2013_COMPATIBILITY) && bytes.length < 256)
+            else if (!factory.checkFlag(MsgPackFlags.SPEC2013_COMPATIBILITY) && bytes.length < 0x100)
             {
                 // str 8
                 destination.writeByte(0xd9);
                 destination.writeByte(bytes.length);
             }
-            else if (bytes.length < 65536)
+            else if (bytes.length < 0x10000)
             {
                 // str 16
                 destination.writeByte(0xda);
@@ -143,7 +143,7 @@ package org.msgpack.workers
             {
                 // str 32
                 destination.writeByte(0xdb);
-                destination.writeInt(bytes.length);
+                destination.writeUnsignedInt(bytes.length);
             }
             
             destination.writeBytes(bytes);
@@ -159,7 +159,7 @@ package org.msgpack.workers
             if ((byte & 0xe0) == 0xa0)
                 count = byte & 0x1f;
             else if (byte == 0xd9 && source.bytesAvailable >= 1)
-                count = source.readByte();
+                count = source.readUnsignedByte();
             else if (byte == 0xda && source.bytesAvailable >= 2)
                 count = source.readUnsignedShort();
             else if (byte == 0xdb && source.bytesAvailable >= 4)

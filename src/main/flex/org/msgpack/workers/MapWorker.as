@@ -166,15 +166,12 @@ package org.msgpack.workers
             var key:* = incomplete;
             var val:* = incomplete;
             
-            //if (count == -1)
-            //{
             if ((byte & 0xf0) == 0x80)
                 count = byte & 0x0f;
             else if (byte == 0xde && source.bytesAvailable >= 2)
                 count = source.readUnsignedShort();
             else if (byte == 0xdf && source.bytesAvailable >= 4)
                 count = source.readUnsignedInt();
-            //}
             
             var keyWorker:IWorker;
             var keyByte:int;
