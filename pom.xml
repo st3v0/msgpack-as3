@@ -19,6 +19,22 @@
         <tag>HEAD</tag>
     </scm>
 
+    <repositories>
+        <repository>
+            <snapshots/>
+            <id>sonatype-forge-snapshots</id>
+            <url>https://repository.sonatype.org/content/groups/forge/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots/>
+            <id>sonatype-forge-snapshots</id>
+            <url>https://repository.sonatype.org/content/groups/forge/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -34,6 +50,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <skipTests>true</skipTests>
+
         <flexmojos.version>4.0-RC2</flexmojos.version>
         <flexunit.version>4.0-rc-1</flexunit.version>
         <flex.sdk.version>4.5.1.21328</flex.sdk.version>
@@ -64,16 +83,12 @@
 
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>external.atlassian.jgitflow</groupId>
                     <artifactId>jgitflow-maven-plugin</artifactId>
                     <version>1.0-m5.1</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <!-- <pushFeatures>true</pushFeatures>
-                        <pushReleases>true</pushReleases>
-                        <pushHotfixes>true</pushHotfixes> -->
                         <noDeploy>true</noDeploy>
 
                         <flowInitContext>
@@ -191,18 +206,18 @@
                             </goals>
                         </execution>
                         <execution>
-							<id>generate-asdoc</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>asdoc</goal>
-							</goals>
-							<configuration>
-								<windowTitle>MsgPack for ActionScript3 (${project.version})</windowTitle>
-								<mainTitle>MsgPack for ActionScript3 (${project.version})</mainTitle>
-	                        	<dateInFooter>true</dateInFooter>
-	                        	<leftFramesetWidth>350</leftFramesetWidth>
-	                        </configuration>
-						</execution>
+                            <id>generate-asdoc</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>asdoc</goal>
+                            </goals>
+                            <configuration>
+                                <windowTitle>MessagePack for ActionScript3 (${project.version})</windowTitle>
+                                <mainTitle>MessagePack for ActionScript3 (${project.version})</mainTitle>
+                                <dateInFooter>true</dateInFooter>
+                                <leftFramesetWidth>350</leftFramesetWidth>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
 
@@ -233,6 +248,64 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- This will setup Windows machines to run flash player unit tests. -->
+            <!-- Similar profiles will need to be created for linux, mac, etc.. -->
+            <!-- Headless machines introduce another layer of complexity because the flash tests -->
+            <!-- require a virtual frame buffer of sorts, xvfb (linux), etc... -->
+            <!-- For now windows unit tests will be fine until a requirement for any other arises. -->
+            <id>platform-windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+
+            <properties>
+                <skipTests>false</skipTests>
+                <flashPlayer.command>${settings.localRepository}\com\adobe\flashplayer\11\flashplayer-11-debug.exe</flashPlayer.command>
+                <flex.flashPlayer.command>${settings.localRepository}\com\adobe\flashplayer\11\flashplayer-11-debug.exe</flex.flashPlayer.command>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.savage7.maven.plugins</groupId>
+                        <artifactId>maven-external-dependency-plugin</artifactId>
+                        <version>0.5-SONATYPE-r116</version>
+                        <configuration>
+                            <stagingDirectory>${project.build.directory}/dependencies/</stagingDirectory>
+                            <createChecksum>true</createChecksum>
+                            <skipChecksumVerification>false</skipChecksumVerification>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.adobe</groupId>
+                                    <artifactId>flashplayer</artifactId>
+                                    <version>11</version>
+                                    <classifier>debug</classifier>
+                                    <packaging>exe</packaging>
+                                    <downloadUrl>
+                                        https://fpdownload.macromedia.com/pub/flashplayer/updaters/11/flashplayer_11_sa_debug_32bit.exe
+                                    </downloadUrl>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>resolve-external</goal>
+                                    <goal>install-external</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
 

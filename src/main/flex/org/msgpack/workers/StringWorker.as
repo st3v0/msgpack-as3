@@ -26,165 +26,165 @@ package org.msgpack.workers
 	
 	import org.msgpack.MsgPackFlags;
 	import org.msgpack.incomplete;
-
-    //--------------------------------------
-    //  Events
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Styles
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Other metadata
-    //--------------------------------------
-    
-    public final class StringWorker extends AbstractWorker
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
+	public final class StringWorker extends AbstractWorker
 	{
-        //--------------------------------------------------------------------------
-        //
-        //  Class Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Class Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Constructor
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         *  Constructor.
-         *  
-         *  @langversion 3.0
-         *  @playerversion Flash 9
-         *  @playerversion AIR 1.1
-         *  @productversion Flex 3
-         */
-        public function StringWorker(factory:WorkerFactory=null)
-        {
-            super(factory);
-        }
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-        
-        //----------------------------------
-        //  property
-        //----------------------------------
-        
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * @inheritDoc
-         */
-        override public function checkByte(byte:int):Boolean
-        {
-            return (byte & 0xe0) == 0xa0 || byte == 0xd9 || byte == 0xda || byte == 0xdb;
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function checkType(data:*):Boolean
-        {
-            return data is String;
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function assembly(data:*, destination:IDataOutput):void
-        {
-            var bytes:ByteArray = new ByteArray();
-            bytes.writeUTFBytes(data.toString());
-            
-            if (bytes.length < 0x20)
-            {
-                // fix str
-                destination.writeByte(0xa0 | bytes.length);
-            }
-            else if (!factory.checkFlag(MsgPackFlags.SPEC2013_COMPATIBILITY) && bytes.length < 0x100)
-            {
-                // str 8
-                destination.writeByte(0xd9);
-                destination.writeByte(bytes.length);
-            }
-            else if (bytes.length < 0x10000)
-            {
-                // str 16
-                destination.writeByte(0xda);
-                destination.writeShort(bytes.length);
-            }
-            else
-            {
-                // str 32
-                destination.writeByte(0xdb);
-                destination.writeUnsignedInt(bytes.length);
-            }
-            
-            destination.writeBytes(bytes);
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function disassembly(byte:int, source:IDataInput):*
-        {
-            var count:int = -1;
-            
-            if ((byte & 0xe0) == 0xa0)
-                count = byte & 0x1f;
-            else if (byte == 0xd9 && source.bytesAvailable >= 1)
-                count = source.readUnsignedByte();
-            else if (byte == 0xda && source.bytesAvailable >= 2)
-                count = source.readUnsignedShort();
-            else if (byte == 0xdb && source.bytesAvailable >= 4)
-                count = source.readUnsignedInt();
-            
-            if (source.bytesAvailable >= count)
-            {
-                var data:ByteArray = new ByteArray();
-                
-                if (count > 0)
-                    source.readBytes(data, 0, count);
-                
-                return factory.checkFlag(MsgPackFlags.READ_STRING_AS_BYTE_ARRAY) ? data : data.toString();
-            }
-            
-            return incomplete;
-        }
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Event Listeners
-        //
-        //--------------------------------------------------------------------------
+		//--------------------------------------------------------------------------
+		//
+		//  Class Variables
+		//
+		//--------------------------------------------------------------------------
 		
-
+		//--------------------------------------------------------------------------
+		//
+		//  Class Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Constructor
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 *  Constructor.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 9
+		 *  @playerversion AIR 1.1
+		 *  @productversion Flex 3
+		 */
+		public function StringWorker(factory:WorkerFactory=null, priority:int=0)
+		{
+			super(factory, priority);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Variables
+		//
+		//--------------------------------------------------------------------------
+		
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		//----------------------------------
+		//  property
+		//----------------------------------
+		
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function checkByte(byte:int):Boolean
+		{
+			return (byte & 0xe0) == 0xa0 || byte == 0xd9 || byte == 0xda || byte == 0xdb;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function checkType(data:*):Boolean
+		{
+			return data is String;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function assembly(data:*, destination:IDataOutput):void
+		{
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeUTFBytes(data.toString());
+			
+			if (bytes.length < 0x20)
+			{
+				// fix str
+				destination.writeByte(0xa0 | bytes.length);
+			}
+			else if (!factory.checkFlag(MsgPackFlags.SPEC2013_COMPATIBILITY) && bytes.length < 0x100)
+			{
+				// str 8
+				destination.writeByte(0xd9);
+				destination.writeByte(bytes.length);
+			}
+			else if (bytes.length < 0x10000)
+			{
+				// str 16
+				destination.writeByte(0xda);
+				destination.writeShort(bytes.length);
+			}
+			else
+			{
+				// str 32
+				destination.writeByte(0xdb);
+				destination.writeUnsignedInt(bytes.length);
+			}
+			
+			destination.writeBytes(bytes);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function disassembly(byte:int, source:IDataInput):*
+		{
+			var count:int = -1;
+			
+			if ((byte & 0xe0) == 0xa0)
+				count = byte & 0x1f;
+			else if (byte == 0xd9 && source.bytesAvailable >= 1)
+				count = source.readUnsignedByte();
+			else if (byte == 0xda && source.bytesAvailable >= 2)
+				count = source.readUnsignedShort();
+			else if (byte == 0xdb && source.bytesAvailable >= 4)
+				count = source.readUnsignedInt();
+			
+			if (source.bytesAvailable >= count)
+			{
+				var data:ByteArray = new ByteArray();
+				
+				if (count > 0)
+					source.readBytes(data, 0, count);
+				
+				return factory.checkFlag(MsgPackFlags.READ_STRING_AS_BYTE_ARRAY) ? data : data.toString();
+			}
+			
+			return incomplete;
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Event Listeners
+		//
+		//--------------------------------------------------------------------------
+		
+		
 		
 	}
 }

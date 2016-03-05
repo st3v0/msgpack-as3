@@ -20,26 +20,26 @@
 
 package org.msgpack
 {
-	public class MsgPackFlags
+	public final class MsgPackFlags
 	{
-        /**
-         * Flag which indicates that raw buffers must be decoded as a <code>ByteArray</code> instead of a <code>String</code>.
-         * 
-         * @see Factory#checkFlag()
-         */
-        public static const READ_STRING_AS_BYTE_ARRAY:uint = 0x01;
-        
+		/**
+		 * Flag which indicates that raw buffers must be decoded as a <code>ByteArray</code> instead of a <code>String</code>.
+		 * 
+		 * @see Factory#checkFlag()
+		 */
+		public static const READ_STRING_AS_BYTE_ARRAY:uint = 0x01;
+		
 		/**
 		 * Flag which indicates that little endian buffers must be accepted (MessagePack specification works only with big endian).
-         * 
+		 * 
 		 * @see Factory#checkFlag()
 		 */
 		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
-        
-        /**
+		
+		/**
 		 * This flag enables backwards compatibility with implementations targeting the old 2013 msgpack spec.
-         * 
-         * @see https://github.com/msgpack/msgpack/blob/master/spec-old.md
+		 * 
+		 * @see https://github.com/msgpack/msgpack/blob/master/spec-old.md
 		 */
 		public static const SPEC2013_COMPATIBILITY:uint = 0x04;
 	}

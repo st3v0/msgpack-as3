@@ -20,91 +20,107 @@
 
 package org.msgpack.workers
 {
-    import flash.utils.IDataInput;
-    import flash.utils.IDataOutput;
-
-    //--------------------------------------
-    //  Events
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Styles
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Other metadata
-    //--------------------------------------
-    
-    /**
-     * 
-     */
-    public interface IWorker
-    {
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * The instance of the parent factory.
-         * 
-         * @return Return the instance of the parent factory.
-         */
-        function get factory():IWorkerFactory;
-        
-        /**
-         * @private 
-         */
-        function set factory(value:IWorkerFactory):void;
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * Static method which checks whether this worker is capable of decoding the data type of this byte.<br>
-         * Children classes must rewrite this static method.
-         * 
-         * @param byte Signature byte of a message pack object.
-         * 
-         * @return Must return true if this worker is capable of decoding the following data.
-         */
-        function checkByte(byte:int):Boolean;
-        
-        /**
-         * Static method which checks whether this worker is capable of decoding the data type of this byte.<br>
-         * Children classes must rewrite this static method.
-         * @param byte Signature byte of a message pack object.
-         * @return Must return true if this worker is capable of decoding the following data.
-         */
-        function checkType(data:*):Boolean;
-        
-        /**
-         * Encode <code>data</code> into <code>destination</code> stream.
-         * 
-         * @param data Object to be encoded.
-         * @param destination Object which implements <code>IDataOutput</code>.
-         * 
-         * @see MsgPack#write()
-         */
-        function assembly(data:*, destination:IDataOutput):void;
-        
-        /**
-         * Decode an object from <code>source</code> stream. If not all bytes of the object are available, this method must return <code>incomplete</code>,
-         * and the content which was already decoded must be saved. Thus, you can read stream data making consecutive calls to this method.
-         * 
-         * @param byte The signature byte of the following data.
-         * @param source Object which implements <code>IDataInput</code>.
-         * 
-         * @return The decoded object
-         * 
-         * @see org.msgpack#incomplete
-         * @see MsgPack#read()
-         */
-        function disassembly(byte:int, source:IDataInput):*;
-    }
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
+	/**
+	 * 
+	 */
+	public interface IWorker
+	{
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		//----------------------------------
+		//  factory
+		//----------------------------------
+		/**
+		 * The instance of the parent factory.
+		 * 
+		 * @return Return the instance of the parent factory.
+		 */
+		function get factory():IWorkerFactory;
+		
+		/**
+		 * @private 
+		 */
+		function set factory(value:IWorkerFactory):void;
+		
+		//----------------------------------
+		//  priority
+		//----------------------------------
+		/**
+		 * @private 
+		 */
+		function get priority():int;
+		
+		/**
+		 * @private 
+		 */
+		function set priority(value:int):void;
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * Static method which checks whether this worker is capable of decoding the data type of this byte.<br>
+		 * Children classes must rewrite this static method.
+		 * 
+		 * @param byte Signature byte of a message pack object.
+		 * 
+		 * @return Must return true if this worker is capable of decoding the following data.
+		 */
+		function checkByte(byte:int):Boolean;
+		
+		/**
+		 * Static method which checks whether this worker is capable of decoding the data type of this byte.<br>
+		 * Children classes must rewrite this static method.
+		 * @param byte Signature byte of a message pack object.
+		 * @return Must return true if this worker is capable of decoding the following data.
+		 */
+		function checkType(data:*):Boolean;
+		
+		/**
+		 * Encode <code>data</code> into <code>destination</code> stream.
+		 * 
+		 * @param data Object to be encoded.
+		 * @param destination Object which implements <code>IDataOutput</code>.
+		 * 
+		 * @see MsgPack#write()
+		 */
+		function assembly(data:*, destination:IDataOutput):void;
+		
+		/**
+		 * Decode an object from <code>source</code> stream. If not all bytes of the object are available, this method must return <code>incomplete</code>,
+		 * and the content which was already decoded must be saved. Thus, you can read stream data making consecutive calls to this method.
+		 * 
+		 * @param byte The signature byte of the following data.
+		 * @param source Object which implements <code>IDataInput</code>.
+		 * 
+		 * @return The decoded object
+		 * 
+		 * @see org.msgpack#incomplete
+		 * @see MsgPack#read()
+		 */
+		function disassembly(byte:int, source:IDataInput):*;
+	}
 }

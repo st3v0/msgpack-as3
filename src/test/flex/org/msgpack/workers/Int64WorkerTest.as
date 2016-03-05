@@ -101,6 +101,7 @@ package org.msgpack.workers
             
             for (var i:int = 0; i < 100000; i++)
             {
+				//   uint.MAX < rnd value <= 53bit MAX
                 input = Math.floor(Math.random() * 9007194959773697) + uint.MAX_VALUE;
                 bytes = new MsgPack().write(input);
                 bytes.position = 0;
@@ -127,7 +128,8 @@ package org.msgpack.workers
             
             for (var i:int = 0; i < 100000; i++)
             {
-                input = -Math.floor(Math.random() * 9007194959773697) + uint.MAX_VALUE;
+				//   uint.MAX < rnd value <= 53bit MAX
+                input = -(Math.floor(Math.random() * 9007194959773697) + uint.MAX_VALUE);
                 bytes = new MsgPack().write(input);
                 bytes.position = 0;
                 

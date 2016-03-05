@@ -20,80 +20,90 @@
 
 package org.msgpack.workers
 {
-
-    //--------------------------------------
-    //  Events
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Styles
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Other metadata
-    //--------------------------------------
-    
-    /**
-     * 
-     */
-    public interface IWorkerFactory
-    {
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-              
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * 
-         * @param worker
-         * @param priority
-         * 
-         */
-        function assign(worker:IWorker, priority:int=0):void
-        
-        /**
-         * Remove the worker from the class which was assigned. If the worker was assigned to several classes, you must call this method for each one.
-         * @param type The class type which the worker was assigned to.
-         * @see Worker
-         */
-        function unassign(worker:IWorker):IWorker
-            
-        /**
-         * 
-         * @param clazz
-         * @return 
-         */
-        function getWorkerByClass(clazz:Class):IWorker
-            
-        /**
-         * 
-         * @param data
-         * @return 
-         */
-        function getWorkerByType(data:*):IWorker;
-        
-        /**
-         * Return the worker which is capable of decoding the next byte of the input stream.
-         * @param source Input stream.
-         * @return Return the related worker.
-         * @throws org.msgpack.MsgPackError Thrown when no worker is capable of decode the next byte of the input stream.
-         */
-        function getWorkerByByte(byte:int):IWorker;
-        
-        /**
-         * Check if the flag is <code>true</code>.
-         * @param f Flag value.
-         * @return True or flase.
-         * @see MsgPackFlags#ACCEPT_LITTLE_ENDIAN
-         */
-        function checkFlag(f:uint):Boolean;
-    }
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
+	/**
+	 * 
+	 */
+	public interface IWorkerFactory
+	{
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * TODO
+		 * @param worker
+		 */
+		function assign(worker:IWorker):void
+		
+		/**
+		 * Remove the worker from the class which was assigned. If the worker was assigned to several classes, you must call this method for each one.
+		 * @param type The class type which the worker was assigned to.
+		 * @see Worker
+		 */
+		function unassign(worker:IWorker):IWorker
+			
+		/**
+		 * This is a helper method to quickly add workers.
+		 */
+		function assignAll(workers:Vector.<IWorker>):void;
+		
+		/**
+		 * This is a helper method to quickly remove all workers.
+		 *  
+		 * @return A list of workers which were unassigned.
+		 */
+		function unassignAll():Vector.<IWorker>;
+		
+		/**
+		 * TODO
+		 * @param clazz
+		 * @return 
+		 */
+		function getWorkerByClass(clazz:Class):IWorker
+		
+		/**
+		 * TODO
+		 * @param data
+		 * @return 
+		 */
+		function getWorkerByType(data:*):IWorker;
+		
+		/**
+		 * Return the worker which is capable of decoding the next byte of the input stream.
+		 * @param source Input stream.
+		 * @return Return the related worker.
+		 * @throws org.msgpack.MsgPackError Thrown when no worker is capable of decode the next byte of the input stream.
+		 */
+		function getWorkerByByte(byte:int):IWorker;
+		
+		/**
+		 * Check if the flag is <code>true</code>.
+		 * @param f Flag value.
+		 * @return True or flase.
+		 * @see MsgPackFlags#ACCEPT_LITTLE_ENDIAN
+		 */
+		function checkFlag(f:uint):Boolean;
+	}
 }

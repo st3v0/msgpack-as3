@@ -21,6 +21,7 @@
 package org.msgpack
 {
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	import flash.utils.IDataInput;
 	import flash.utils.IDataOutput;
 	
@@ -30,13 +31,26 @@ package org.msgpack
 	import org.msgpack.workers.IWorker;
 	import org.msgpack.workers.IWorkerFactory;
 	import org.msgpack.workers.Int64Worker;
-	import org.msgpack.workers.WorkerFactory;
+	import org.msgpack.workers.IntegerWorker;
+	import org.msgpack.workers.MapWorker;
 	import org.msgpack.workers.NullWorker;
 	import org.msgpack.workers.NumberWorker;
-	import org.msgpack.workers.IntegerWorker;
 	import org.msgpack.workers.StringWorker;
-	import org.msgpack.workers.MapWorker;
-
+	import org.msgpack.workers.WorkerFactory;
+	import org.msgpack.workers.WorkerPriority;
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
 	/**
 	 * MessagePack class. Use objects of this class to read and write message pack data.<br>
 	 * Each MsgPack instance has a Factory instance.
@@ -44,38 +58,71 @@ package org.msgpack
 	 */
 	public final class MsgPack
 	{
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Class Variables
+		//
+		//--------------------------------------------------------------------------
 		/**
 		 * Get full version as string.
 		 * @return Full version string.
 		 */
 		public static function get VERSION():String
-		{            
-            return BUILD::version;
+		{
+			return BUILD::version;
 		}
-
+		
+		//--------------------------------------------------------------------------
 		//
-		// private attributes
+		//  Class Methods
 		//
-		private var _factory:IWorkerFactory;
-        
-		private var rootByte:int;
-		private var root:IWorker;
-
-
-		//
-		// constructor
-		//
+		//--------------------------------------------------------------------------
+		
 		/**
-		 * Create a new instance of <code>MsgPack</code> capable of reading/writing data.
-		 * You can decode streaming data using the method <code>read</code>.<br>
+		 * This is a static helper write method.
+		 *
+		 * <p>This will incur a MsgPack instantiation cost on every call.</p>
+		 *
+		 * @see #write()
+		 */
+		public static function write(data:*, output:IDataOutput = null):*
+		{
+			return new MsgPack().write(data, output);
+		}
+		
+		/**
+		 * This is a static helper read method.
+		 *
+		 * <p>This will incur a MsgPack instantiation cost on every call.</p>
+		 *
+		 * @see #read()
+		 */
+		public static function read(input:IDataInput):*
+		{
+			return new MsgPack().read(input);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Constructor
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * Constructor.
+		 *
+		 * <p>Create a new instance of <code>MsgPack</code> capable of reading/writing data.
+		 * You can decode streaming data using the method <code>read</code>.</p>
 		 * The standard workers are:<br>
 		 * <li><code>NullWorker: null</code></li>
 		 * <li><code>BooleanWorker: Boolean</code></li>
 		 * <li><code>IntegerWorker: int and uint</code></li>
+		 * <li><code>Int64Worker: Whole Number</code></li>
 		 * <li><code>NumberWorker: Number</code></li>
 		 * <li><code>ArrayWorker: Array</code></li>
-         * <li><code>StringWorker: String</code></li>
-         * <li><code>BinaryWorker: ByteArray</code></li>
+		 * <li><code>StringWorker: String</code></li>
+		 * <li><code>BinaryWorker: ByteArray</code></li>
 		 * <li><code>MapWorker: Object</code></li>
 		 * @param flags Set of flags capable of customizing the runtime behavior of this object.
 		 * @see #read()
@@ -84,33 +131,68 @@ package org.msgpack
 		 * @see MsgPackFlags#READ_RAW_AS_BYTE_ARRAY
 		 * @see MsgPackFlags#ACCEPT_LITTLE_ENDIAN
 		 * @see Factory#checkFlag()
+		 *
+		 * @langversion 3.0
+		 * @playerversion Flash 9
+		 * @playerversion AIR 1.1
+		 * @productversion Flex 3
 		 */
+		
 		public function MsgPack(flags:uint = 0, factory:IWorkerFactory=null)
 		{
-            if (factory)
-            {
-                _factory = factory;
-            }
-            else
-            {
-    			_factory = new WorkerFactory(flags);
-                
-                // Setup default workers. Order & priority matters.
-                _factory.assign(new NullWorker(), -50);
-                _factory.assign(new IntegerWorker(), -50);
-                _factory.assign(new Int64Worker(), -50);
-                _factory.assign(new NumberWorker(), -50);
-                _factory.assign(new BooleanWorker(), -50);
-                _factory.assign(new StringWorker(), -50);
-                _factory.assign(new ArrayWorker(), -50);
-                _factory.assign(new MapWorker(), -50);
-                _factory.assign(new BinaryWorker(), -50);
-            }
+			if (factory)
+			{
+				_factory = factory;
+			}
+			else
+			{
+				_factory = new WorkerFactory(flags);
+				
+				// Setup default workers.
+				// Order & priority matters. First matching worker is used to serialize/deserialize
+				_factory.assign(new NullWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new BooleanWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new IntegerWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new Int64Worker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new NumberWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new StringWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new ArrayWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new BinaryWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+				_factory.assign(new MapWorker(null, WorkerPriority.DEFAULT_PRIORITY));
+			}
 		}
-
+		
+		//--------------------------------------------------------------------------
 		//
-		// getters and setters
+		//  Variables
 		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * @private
+		 */
+		private var rootByte:int;
+		
+		/**
+		 * @private
+		 */
+		private var root:IWorker;
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		//----------------------------------
+		//  factory
+		//----------------------------------
+		/**
+		 * @private
+		 */
+		private var _factory:IWorkerFactory;
+		
 		/**
 		 * Get the factory associated to this object.
 		 * @return Factory instance used by this instance.
@@ -120,10 +202,14 @@ package org.msgpack
 		{
 			return _factory;
 		}
-
+		
+		
+		//--------------------------------------------------------------------------
 		//
-		// public interface
+		//  Methods
 		//
+		//--------------------------------------------------------------------------
+		
 		/**
 		 * Write an object in <code>output</code> buffer.
 		 * @param data Object to be encoded
@@ -134,16 +220,16 @@ package org.msgpack
 		public function write(data:*, output:IDataOutput = null):*
 		{
 			var worker:IWorker = _factory.getWorkerByType(data);
-
+			
 			if (!output)
 				output = new ByteArray();
-
+			
 			checkBigEndian(output);
-
+			
 			worker.assembly(data, output);
 			return output;
 		}
-
+		
 		/**
 		 * Read an object from <code>input</code> buffer. This method supports streaming.
 		 * If the object cannot be completely decoded (not all bytes available in <code>input</code>), <code>incomplete</code> object is returned.
@@ -157,31 +243,38 @@ package org.msgpack
 		public function read(input:IDataInput):*
 		{
 			checkBigEndian(input);
-
+			
 			if (!root)
 			{
 				if (input.bytesAvailable == 0)
 					return incomplete;
-
-                rootByte = input.readByte() & 0xff;
+				
+				rootByte = input.readByte() & 0xff;
 				root = _factory.getWorkerByByte(rootByte);
 			}
-
+			
 			var obj:* = root.disassembly(rootByte, input);
-
+			
 			if (obj != incomplete)
 				root = undefined;
-
+			
 			return obj;
 		}
-
-        /**
-         * @private 
-         */
+		
+		/**
+		 * @private
+		 */
 		private function checkBigEndian(dataStream:*):void
 		{
-			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(MsgPackFlags.ACCEPT_LITTLE_ENDIAN))
+			if (dataStream.endian == Endian.LITTLE_ENDIAN && !_factory.checkFlag(MsgPackFlags.ACCEPT_LITTLE_ENDIAN))
 				throw new MsgPackError("Object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
 		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Event Listeners
+		//
+		//--------------------------------------------------------------------------
+		
 	}
 }

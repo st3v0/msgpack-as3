@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// as3-msgpack (MessagePack for Actionscript3)
-// Copyright (C) 2013 Lucas Teixeira (Disturbed Coder)
+// msgpack-as3 (MessagePack for Actionscript3)
+// Copyright (C) 2016 Stephen Thompson
 //
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@
 
 package org.msgpack.workers
 {
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
+	import org.msgpack.MsgPackError;
 	
 	//--------------------------------------
 	//  Events
@@ -35,13 +34,22 @@ package org.msgpack.workers
 	//  Other metadata
 	//--------------------------------------
 	
-	public final class BooleanWorker extends AbstractWorker
+	/**
+	 * 
+	 */
+	public final class WorkerPriority
 	{
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Class Variables
 		//
 		//--------------------------------------------------------------------------
+		
+		/**
+		 * This is the default worker priority level. 
+		 */
+		public static const DEFAULT_PRIORITY:int = -50;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -63,75 +71,9 @@ package org.msgpack.workers
 		 *  @playerversion AIR 1.1
 		 *  @productversion Flex 3
 		 */
-		public function BooleanWorker(factory:IWorkerFactory=null, priority:int=0)
+		public function WorkerPriority()
 		{
-			super(factory, priority);
+			throw new MsgPackError("WorkerPriority cannot be instantiated.");
 		}
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Variables
-		//
-		//--------------------------------------------------------------------------
-		
-		
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Properties
-		//
-		//--------------------------------------------------------------------------
-		
-		//----------------------------------
-		//  property
-		//----------------------------------
-		
-		
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Methods
-		//
-		//--------------------------------------------------------------------------
-		
-		/**
-		 * @inheritDoc
-		 */
-		override public function checkByte(byte:int):Boolean
-		{
-			return byte == 0xc3 || byte == 0xc2;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override public function checkType(data:*):Boolean
-		{
-			return data is Boolean;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override public function assembly(data:*, destination:IDataOutput):void
-		{
-			destination.writeByte(data ? 0xc3 : 0xc2);
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		override public function disassembly(byte:int, source:IDataInput):*
-		{
-			return byte == 0xc3;
-		}
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Event Listeners
-		//
-		//--------------------------------------------------------------------------
-		
-		
 	}
 }

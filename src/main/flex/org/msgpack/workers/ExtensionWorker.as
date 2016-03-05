@@ -24,122 +24,122 @@ package org.msgpack.workers
 	import flash.utils.IDataOutput;
 	
 	import org.msgpack.MsgPackError;
-
-    //--------------------------------------
-    //  Events
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Styles
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Other metadata
-    //--------------------------------------
-    
-    /**
-     * FIXME
-     * Abstract base class for all workers. Workers are used in factories where they are assigned to 
-     * encode/decode message pack data of a type. Each type of data uses a own worker.
-     * 
-     * <p>If you want to create a custom worker (for a custom type) you need to create a class 
-     * which extends this class.</p>
-     * 
-     * @see Factory
-     */
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
+	/**
+	 * FIXME
+	 * Abstract base class for all workers. Workers are used in factories where they are assigned to 
+	 * encode/decode message pack data of a type. Each type of data uses a own worker.
+	 * 
+	 * <p>If you want to create a custom worker (for a custom type) you need to create a class 
+	 * which extends this class.</p>
+	 * 
+	 * @see Factory
+	 */
 	public class ExtensionWorker extends AbstractWorker
 	{
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Class Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Class Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Constructor
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * Constructor.
-         *  
-         * @param factory Parent factory
-         * 
-         * @langversion 3.0
-         * @playerversion Flash 9
-         * @playerversion AIR 1.1
-         * @productversion Flex 3
-         */
-        public function ExtensionWorker(factory:IWorkerFactory=null)
-        {
-            super(factory);
-        }
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-        
-        //----------------------------------
-        //  property
-        //----------------------------------
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * @inheritDoc
-         */
-        override public function checkByte(byte:int):Boolean
-        {
-            return byte == 0xd4 || byte == 0xd5 || byte == 0xd6 
-                || byte == 0xd7 || byte == 0xd8 || byte == 0xc7 
-                || byte == 0xc8 || byte == 0xc9;
-        }
-        
-        /**
-         * @inheritDoc
-         * @throws MsgPackError Method accessed and not overriden.
-         */
-        override public function assembly(data:*, destination:IDataOutput):void
-        {
-            throw new MsgPackError("Extension format not supported.");
-        }
-        
-        /**
-         * @inheritDoc
-         * @throws MsgPackError Method accessed and not overriden.
-         */
-        override public function disassembly(byte:int, source:IDataInput):*
-        {
-            throw new MsgPackError("Extension format not supported.");
-        }
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Event Listeners
-        //
-        //--------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Class Variables
+		//
+		//--------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Class Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Constructor
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * Constructor.
+		 *  
+		 * @param factory Parent factory
+		 * 
+		 * @langversion 3.0
+		 * @playerversion Flash 9
+		 * @playerversion AIR 1.1
+		 * @productversion Flex 3
+		 */
+		public function ExtensionWorker(factory:IWorkerFactory=null, priority:int=0)
+		{
+			super(factory, priority);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Variables
+		//
+		//--------------------------------------------------------------------------
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		//----------------------------------
+		//  property
+		//----------------------------------
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function checkByte(byte:int):Boolean
+		{
+			return byte == 0xd4 || byte == 0xd5 || byte == 0xd6 
+				|| byte == 0xd7 || byte == 0xd8 || byte == 0xc7 
+				|| byte == 0xc8 || byte == 0xc9;
+		}
+		
+		/**
+		 * @inheritDoc
+		 * @throws MsgPackError Method accessed and not overriden.
+		 */
+		override public function assembly(data:*, destination:IDataOutput):void
+		{
+			throw new MsgPackError("Extension format not supported.");
+		}
+		
+		/**
+		 * @inheritDoc
+		 * @throws MsgPackError Method accessed and not overriden.
+		 */
+		override public function disassembly(byte:int, source:IDataInput):*
+		{
+			throw new MsgPackError("Extension format not supported.");
+		}
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Event Listeners
+		//
+		//--------------------------------------------------------------------------
 	}
 }

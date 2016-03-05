@@ -21,7 +21,6 @@ bytes.position = 0;
 trace(msgpack.read(bytes));
 ```
 
-
 ### Flags
 <p>Currently there are three flags which you may use to initialize a MsgPack object:</p>
 * MsgPackFlags.READ_STRING_AS_BYTE_ARRAY: message pack string data is read as byte array instead of string;
@@ -32,7 +31,7 @@ trace(msgpack.read(bytes));
 var msg:MsgPack;
 
 // use logical operator OR to set the flags.
-msgpack = new MsgPack(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY | MsgPackFlags.ACCEPT_LITTLE_ENDIAN);
+msgpack = new MsgPack(MsgPackFlags.READ_STRING_AS_BYTE_ARRAY | MsgPackFlags.ACCEPT_LITTLE_ENDIAN);
 ```
 
 ## Credits

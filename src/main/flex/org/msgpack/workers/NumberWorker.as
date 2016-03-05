@@ -24,137 +24,137 @@ package org.msgpack.workers
 	import flash.utils.IDataOutput;
 	
 	import org.msgpack.incomplete;
-
-    //--------------------------------------
-    //  Events
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Styles
-    //--------------------------------------
-    
-    //--------------------------------------
-    //  Other metadata
-    //--------------------------------------
-    
-    public final class NumberWorker extends AbstractWorker
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Styles
+	//--------------------------------------
+	
+	//--------------------------------------
+	//  Other metadata
+	//--------------------------------------
+	
+	public final class NumberWorker extends AbstractWorker
 	{
-        //--------------------------------------------------------------------------
-        //
-        //  Class Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Class Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Constructor
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         *  Constructor.
-         *  
-         *  @langversion 3.0
-         *  @playerversion Flash 9
-         *  @playerversion AIR 1.1
-         *  @productversion Flex 3
-         */
-        public function NumberWorker(factory:WorkerFactory=null)
-        {
-            super(factory);
-        }
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Variables
-        //
-        //--------------------------------------------------------------------------
-        
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-        
-        //----------------------------------
-        //  property
-        //----------------------------------
-        
-        
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Methods
-        //
-        //--------------------------------------------------------------------------
-        
-        /**
-         * @inheritDoc
-         */
-        override public function checkByte(byte:int):Boolean
-        {
-            return byte == 0xca || byte == 0xcb;
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function checkType(data:*):Boolean
-        {
-            return data is Number && !(data is uint || data is int);
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function assembly(data:*, destination:IDataOutput):void
-        {
-            // NOTE: Unfortunately in ActionScript there's no way to identify a 
-            // 32bit float, this means all floating point values will be encoding
-            // at 64bit using 9 bytes of storage.
-            
-            // float 32
-            //     destination.writeByte(0xca);
-            //     destination.writeFloat(data);
-            
-            // float 64
-            destination.writeByte(0xcb);
-            destination.writeDouble(data);
-        }
-        
-        /**
-         * @inheritDoc
-         */
-        override public function disassembly(byte:int, source:IDataInput):*
-        {
-            var data:Number;
-            
-            if (byte == 0xcb && source.bytesAvailable >= 8)
-                return source.readDouble();
-            else if (byte == 0xca && source.bytesAvailable >= 4)
-                return source.readFloat();
-            
-            return incomplete;
-        }
-        
-        //--------------------------------------------------------------------------
-        //
-        //  Event Listeners
-        //
-        //--------------------------------------------------------------------------
-        
-       
-
+		//--------------------------------------------------------------------------
+		//
+		//  Class Variables
+		//
+		//--------------------------------------------------------------------------
 		
-
+		//--------------------------------------------------------------------------
+		//
+		//  Class Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Constructor
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 *  Constructor.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 9
+		 *  @playerversion AIR 1.1
+		 *  @productversion Flex 3
+		 */
+		public function NumberWorker(factory:WorkerFactory=null, priority:int=0)
+		{
+			super(factory, priority);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Variables
+		//
+		//--------------------------------------------------------------------------
+		
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		//----------------------------------
+		//  property
+		//----------------------------------
+		
+		
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function checkByte(byte:int):Boolean
+		{
+			return byte == 0xca || byte == 0xcb;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function checkType(data:*):Boolean
+		{
+			return data is Number && !(data is uint || data is int);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function assembly(data:*, destination:IDataOutput):void
+		{
+			// NOTE: Unfortunately in ActionScript there's no way to identify a 
+			// 32bit float, this means all floating point values will be encoding
+			// at 64bit using 9 bytes of storage.
+			
+			// float 32
+			//     destination.writeByte(0xca);
+			//     destination.writeFloat(data);
+			
+			// float 64
+			destination.writeByte(0xcb);
+			destination.writeDouble(data);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function disassembly(byte:int, source:IDataInput):*
+		{
+			var data:Number;
+			
+			if (byte == 0xcb && source.bytesAvailable >= 8)
+				return source.readDouble();
+			else if (byte == 0xca && source.bytesAvailable >= 4)
+				return source.readFloat();
+			
+			return incomplete;
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Event Listeners
+		//
+		//--------------------------------------------------------------------------
+		
+		
+		
+		
+		
 		
 	}
 }
