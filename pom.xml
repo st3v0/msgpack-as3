@@ -21,7 +21,6 @@
 
     <repositories>
         <repository>
-            <snapshots/>
             <id>sonatype-forge-snapshots</id>
             <url>https://repository.sonatype.org/content/groups/forge/</url>
         </repository>
@@ -29,7 +28,6 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <snapshots/>
             <id>sonatype-forge-snapshots</id>
             <url>https://repository.sonatype.org/content/groups/forge/</url>
         </pluginRepository>
