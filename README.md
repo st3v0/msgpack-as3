@@ -42,12 +42,11 @@ msgpack = new MsgPack(MsgPackFlags.READ_STRING_AS_BYTE_ARRAY | MsgPackFlags.ACCE
 ```actionscript
 var msgpack:MsgPack = new MsgPack();
 
-// Instantiate your new Custom Worker.
-var customWorker:IWorker = new CustomWorker();
-
 // Assign the new worker to the factory.
-msgpack.factory.assign(customWorker);
+msgpack.factory.assign(new CustomWorker());
 ```
+
+<p>For more information regarding Extensions refer to the MessagePack specification.</p>
 
 ### Priorities
 <p>Worker priority behaves similar to how the Adobe Event Dispatcher priorities work. In MessagePack, deciding which worker will be use for serializing/deserializing depends on two(2) factors.</p>
